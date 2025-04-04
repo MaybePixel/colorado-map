@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Colorado Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    .leaflet-popup-content-wrapper {
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+    .leaflet-popup-tip {
+      background-color: #1e1e1e;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([39.5501, -105.7821], 7);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Sample towns
+    const towns = [
+      { name: "Aspen", lat: 39.1911, lon: -106.8175 },
+      { name: "Telluride", lat: 37.9375, lon: -107.8123 },
+      { name: "Crested Butte", lat: 38.8697, lon: -106.9878 }
+    ];
+
+    towns.forEach(town => {
+      L.marker([town.lat, town.lon]).addTo(map)
+        .bindPopup(`<b>${town.name}</b><br>Town in Colorado`);
+    });
+
+    // Sample ski resorts
+    const skiResorts = [
+      { name: "Breckenridge Ski Resort", lat: 39.4817, lon: -106.0384 },
+      { name: "Vail Ski Resort", lat: 39.6403, lon: -106.3742 }
+    ];
+
+    skiResorts.forEach(resort => {
+      L.marker([resort.lat, resort.lon], {
+        icon: L.divIcon({ className: 'custom-icon', html: '🎿', iconSize: [20, 20] })
+      }).addTo(map)
+        .bindPopup(`<b>${resort.name}</b><br>Ski Resort`);
+    });
+
+    // Sample bike parks
+    const bikeParks = [
+      { name: "Trestle Bike Park", lat: 39.8865, lon: -105.7625 },
+      { name: "Keystone Bike Park", lat: 39.6051, lon: -105.9541 }
+    ];
+
+    bikeParks.forEach(park => {
+      L.marker([park.lat, park.lon], {
+        icon: L.divIcon({ className: 'custom-icon', html: '🚵‍♂️', iconSize: [20, 20] })
+      }).addTo(map)
+        .bindPopup(`<b>${park.name}</b><br>Lift-Assisted Bike Park`);
+    });
+
+    // Sample BLM Land (polygon)
+    const blmPolygon = L.polygon([
+      [39.5, -108.6],
+      [39.7, -108.6],
+      [39.7, -108.3],
+      [39.5, -108.3]
+    ], {
+      color: "orange",
+      fillColor: "orange",
+      fillOpacity: 0.4
+    }).addTo(map).bindPopup("<b>BLM Land</b><br>Public land managed by BLM");
+
+    // Sample State Forest Land (polygon)
+    const forestPolygon = L.polygon([
+      [40.6, -106.0],
+      [40.7, -106.0],
+      [40.7, -105.8],
+      [40.6, -105.8]
+    ], {
+      color: "green",
+      fillColor: "green",
+      fillOpacity: 0.4
+    }).addTo(map).bindPopup("<b>State Forest Land</b><br>Colorado State Forest");
+  </script>
+</body>
+</html>
